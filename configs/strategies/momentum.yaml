@@ -1,0 +1,228 @@
+# Momentum Strategy Configuration
+
+strategy:
+  name: "momentum"
+  description: "Time-series momentum strategy using moving average crossovers and volatility scaling"
+  version: "1.0.0"
+  enabled: true
+
+# Signal generation parameters
+signals:
+  # Moving average parameters
+  short_ma: 20
+  long_ma: 50
+  ema_short: 12
+  ema_long: 26
+  
+  # Momentum indicators
+  rsi_period: 14
+  rsi_overbought: 70
+  rsi_oversold: 30
+  
+  # MACD parameters
+  macd_fast: 12
+  macd_slow: 26
+  macd_signal: 9
+  
+  # Volatility parameters
+  atr_period: 14
+  volatility_window: 30
+  
+  # Volume confirmation
+  volume_ma_period: 20
+  volume_threshold: 1.5  # Volume spike threshold
+
+# Entry/exit rules
+rules:
+  # Entry conditions
+  entry:
+    # Primary entry: MA crossover
+    ma_crossover: true
+    ma_crossover_confirmation: true  # Require confirmation
+    
+    # Secondary entry: RSI divergence
+    rsi_divergence: true
+    rsi_divergence_lookback: 10
+    
+    # Volume confirmation
+    volume_confirmation: true
+    min_volume_ratio: 1.2
+    
+    # Volatility filter
+    volatility_filter: true
+    min_volatility: 0.01
+    max_volatility: 0.05
+  
+  # Exit conditions
+  exit:
+    # Stop loss
+    stop_loss: true
+    stop_loss_type: "atr"  # atr, percentage, trailing
+    stop_loss_multiplier: 2.0
+    
+    # Take profit
+    take_profit: true
+    take_profit_type: "risk_reward"  # risk_reward, percentage, trailing
+    risk_reward_ratio: 3.0
+    
+    # Trailing stop
+    trailing_stop: true
+    trailing_stop_type: "atr"
+    trailing_stop_multiplier: 1.5
+    
+    # Time-based exit
+    time_exit: true
+    max_hold_periods: 50
+    
+    # Signal reversal
+    signal_reversal: true
+    reversal_confirmation: 2  # Number of periods to confirm reversal
+
+# Position sizing
+position_sizing:
+  method: "volatility_scaled"  # fixed, volatility_scaled, kelly, optimal_f
+  base_size: 0.02  # 2% of portfolio
+  
+  # Volatility scaling
+  volatility_scaling:
+    enabled: true
+    target_volatility: 0.02  # Target 2% daily volatility
+    max_size_multiplier: 3.0
+    min_size_multiplier: 0.5
+  
+  # Kelly criterion
+  kelly:
+    enabled: false
+    win_rate: 0.55
+    avg_win: 0.03
+    avg_loss: 0.02
+
+# Risk management
+risk:
+  max_position_size: 0.1  # 10% of portfolio
+  max_correlation: 0.7
+  max_drawdown: 0.2
+  
+  # Per-trade risk
+  max_risk_per_trade: 0.02  # 2% risk per trade
+  max_risk_per_day: 0.05    # 5% risk per day
+
+# Performance filters
+filters:
+  # Market regime filter
+  market_regime:
+    enabled: true
+    trending_only: true
+    min_trend_strength: 0.01
+  
+  # Volatility filter
+  volatility:
+    enabled: true
+    min_volatility: 0.01
+    max_volatility: 0.05
+  
+  # Volume filter
+  volume:
+    enabled: true
+    min_volume: 1000000  # Minimum 24h volume
+    min_volume_ratio: 0.8
+  
+  # Time filter
+  time:
+    enabled: true
+    avoid_weekends: true
+    trading_hours: [0, 23]  # 24/7 for crypto
+  
+  # News/events filter
+  news:
+    enabled: false
+    avoid_major_events: true
+    event_lookback_hours: 24
+
+# Optimization parameters
+optimization:
+  enabled: true
+  method: "grid_search"  # grid_search, genetic, bayesian
+  
+  # Parameter ranges
+  parameters:
+    short_ma: [10, 15, 20, 25, 30]
+    long_ma: [40, 50, 60, 70, 80]
+    rsi_period: [10, 14, 20]
+    atr_period: [10, 14, 20]
+    volatility_window: [20, 30, 40]
+  
+  # Optimization criteria
+  objective: "sharpe_ratio"  # sharpe_ratio, sortino_ratio, calmar_ratio, total_return
+  min_trades: 30
+  min_win_rate: 0.4
+
+# Backtesting parameters
+backtesting:
+  start_date: "2022-01-01"
+  end_date: "2023-12-31"
+  initial_capital: 100000
+  commission: 0.001
+  slippage: 0.0005
+  
+  # Walk-forward analysis
+  walk_forward:
+    enabled: true
+    window_size: 252  # 1 year
+    step_size: 63     # 3 months
+    min_train_size: 126  # 6 months
+
+# Machine learning integration
+ml_integration:
+  enabled: true
+  
+  # Feature engineering
+  features:
+    technical_indicators: true
+    price_patterns: true
+    volume_patterns: true
+    market_regime: true
+    volatility_regime: true
+  
+  # Model types
+  models:
+    ensemble: true
+    neural_network: false
+    meta_labeling: true
+  
+  # Meta-labeling
+  meta_labeling:
+    method: "triple_barrier"
+    upper_barrier: 0.02
+    lower_barrier: 0.01
+    time_barrier: 5
+    
+    # Features for meta-labeling
+    features:
+      - "rsi"
+      - "macd"
+      - "volume_ratio"
+      - "volatility"
+      - "trend_strength"
+      - "market_regime"
+
+# Monitoring and alerts
+monitoring:
+  # Performance thresholds
+  thresholds:
+    min_sharpe: 0.5
+    max_drawdown: 0.2
+    min_win_rate: 0.4
+    max_turnover: 10.0
+  
+  # Alerts
+  alerts:
+    performance_degradation: true
+    risk_limit_breach: true
+    unusual_activity: true
+  
+  # Reporting
+  reporting:
+    daily_summary: true
+    weekly_analysis: true
+    monthly_report: true

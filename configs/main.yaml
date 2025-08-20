@@ -1,0 +1,125 @@
+# Main configuration for Crypto AI Trading Bot
+
+# Environment settings
+environment: "development"  # development, staging, production
+
+# Data settings
+data:
+  base_path: "data"
+  default_timeframe: "1h"
+  supported_timeframes: ["1m", "5m", "15m", "1h", "4h", "1d"]
+  max_data_age_days: 365
+  cleanup_interval_hours: 24
+
+# Exchange settings
+exchanges:
+  - name: "binance"
+    sandbox: true
+    rate_limit: 100
+  - name: "coinbase"
+    sandbox: true
+    rate_limit: 50
+  - name: "bybit"
+    sandbox: true
+    rate_limit: 100
+
+# Trading settings
+trading:
+  default_symbols: ["BTC/USDT", "ETH/USDT", "ADA/USDT", "DOT/USDT", "LINK/USDT"]
+  max_positions: 10
+  default_position_size: 0.02  # 2% of portfolio
+  max_position_size: 0.1       # 10% of portfolio
+  min_position_size: 0.005     # 0.5% of portfolio
+
+# Risk management
+risk:
+  max_drawdown: 0.2            # 20% maximum drawdown
+  max_leverage: 1.0            # No leverage
+  stop_loss_default: 0.05      # 5% default stop loss
+  take_profit_default: 0.15    # 15% default take profit
+  max_correlation: 0.7         # Maximum correlation between positions
+  var_confidence: 0.95         # VaR confidence level
+
+# Backtesting settings
+backtesting:
+  initial_capital: 100000      # $100k starting capital
+  commission: 0.001            # 0.1% commission
+  slippage: 0.0005             # 0.05% slippage
+  walk_forward:
+    enabled: true
+    window_size: 252           # 1 year
+    step_size: 63              # 3 months
+    min_train_size: 126        # 6 months minimum training
+
+# Machine learning settings
+ml:
+  feature_engineering:
+    price_features: true
+    volume_features: true
+    technical_features: true
+    time_features: true
+    lag_features: true
+  
+  models:
+    ensemble:
+      enabled: true
+      algorithms: ["random_forest", "xgboost", "lightgbm"]
+      stacking: true
+    
+    neural_networks:
+      enabled: false
+      lstm:
+        enabled: true
+        sequence_length: 60
+        hidden_layers: [128, 64, 32]
+    
+    meta_labeling:
+      enabled: true
+      triple_barrier:
+        upper_barrier: 0.02     # 2% upper barrier
+        lower_barrier: 0.01     # 1% lower barrier
+        time_barrier: 5         # 5 periods time barrier
+
+# Logging settings
+logging:
+  level: "INFO"
+  console_output: true
+  file_output: true
+  max_file_size_mb: 10
+  backup_count: 5
+  log_dir: "logs"
+
+# Performance monitoring
+monitoring:
+  enabled: true
+  metrics:
+    - "sharpe_ratio"
+    - "sortino_ratio"
+    - "max_drawdown"
+    - "calmar_ratio"
+    - "hit_rate"
+    - "profit_factor"
+    - "turnover"
+  
+  alerts:
+    max_drawdown_alert: 0.15   # Alert at 15% drawdown
+    low_sharpe_alert: 0.5      # Alert at Sharpe < 0.5
+    high_turnover_alert: 10.0  # Alert at turnover > 10x
+
+# Database settings (optional)
+database:
+  enabled: false
+  type: "postgresql"
+  host: "localhost"
+  port: 5432
+  name: "crypto_trading"
+  user: "postgres"
+  password: ""
+
+# API settings
+api:
+  enabled: false
+  host: "0.0.0.0"
+  port: 8000
+  cors_enabled: true
+  rate_limit: 1000  # requests per hour

@@ -1,0 +1,50 @@
+# Environment Configuration for Crypto Trading Bot
+# Copy this file to .env and fill in your actual values
+
+# Environment
+ENVIRONMENT=development
+
+# Database Configuration (optional)
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=crypto_trading
+DB_USER=postgres
+DB_PASSWORD=
+
+# Exchange API Keys
+# Binance
+BINANCE_API_KEY=your_binance_api_key_here
+BINANCE_API_SECRET=your_binance_secret_here
+BINANCE_SANDBOX=true
+BINANCE_RATE_LIMIT=100
+
+# Coinbase
+COINBASE_API_KEY=your_coinbase_api_key_here
+COINBASE_API_SECRET=your_coinbase_secret_here
+COINBASE_SANDBOX=true
+COINBASE_RATE_LIMIT=50
+
+# Bybit
+BYBIT_API_KEY=your_bybit_api_key_here
+BYBIT_API_SECRET=your_bybit_secret_here
+BYBIT_SANDBOX=true
+BYBIT_RATE_LIMIT=100
+
+# Logging
+LOG_LEVEL=INFO
+LOG_DIR=logs
+
+# Risk Management
+MAX_POSITION_SIZE=0.1
+MAX_DRAWDOWN=0.2
+MAX_LEVERAGE=1.0
+
+# Backtesting
+INITIAL_CAPITAL=100000
+COMMISSION_RATE=0.001
+SLIPPAGE_RATE=0.0005
+
+# Machine Learning
+ML_ENABLED=true
+MODEL_SAVE_PATH=models/
+FEATURE_SAVE_PATH=features/

@@ -1,0 +1,167 @@
+# Ultimate Oscillator + ADX + MFI Strategy Configuration
+# This strategy combines momentum and trend indicators for high-probability signals
+
+strategy:
+  # Ultimate Oscillator Parameters
+  uo_short_period: 7
+  uo_medium_period: 14
+  uo_long_period: 28
+  uo_short_weight: 4.0
+  uo_medium_weight: 2.0
+  uo_long_weight: 1.0
+  
+  # Ultimate Oscillator Thresholds (more permissive for more signals)
+  uo_oversold: 35.0
+  uo_overbought: 65.0
+  uo_extreme_oversold: 25.0
+  uo_extreme_overbought: 75.0
+  
+  # ADX Parameters
+  adx_period: 14
+  adx_smoothing: 14
+  adx_trend_threshold: 20.0
+  adx_strong_trend: 35.0
+  
+  # MFI Parameters
+  mfi_period: 14
+  mfi_oversold: 25.0
+  mfi_overbought: 75.0
+  mfi_extreme_oversold: 15.0
+  mfi_extreme_overbought: 85.0
+  
+  # Signal Generation Rules (more permissive)
+  require_all_confirm: false  # Don't require all indicators to align
+  use_divergence_signals: true
+  min_signal_separation: 3  # Minimum bars between signals
+  
+  # Entry/Exit Rules
+  entry_confirmation_bars: 2
+  exit_on_opposite_extreme: true
+  use_trailing_stops: true
+  
+  # Position Sizing
+  base_position_size: 0.1
+  volatility_scaling: true
+  max_position_size: 0.25
+  confidence_scaling: true
+  
+  # Risk Management
+  stop_loss_atr_multiplier: 2.0
+  take_profit_ratio: 2.5
+  trailing_stop_atr_multiplier: 1.5
+  max_hold_period: 50
+  
+  # Performance Filters (more permissive)
+  min_adx_for_entry: 15.0
+  max_adx_for_reversal: 70.0
+  volume_confirmation: true
+  trend_filter: true
+
+# Signal Configuration (required by base strategy)
+signals:
+  enabled: true
+  min_confidence: 0.6
+  use_volume_confirmation: true
+  use_trend_confirmation: true
+
+# Rules and Entry/Exit Logic (required by base strategy)
+rules:
+  max_positions: 1
+  position_sizing: "volatility_scaled"
+  entry_rules:
+    - require_all_indicators: true
+    - min_signal_separation: 5
+    - confirmation_bars: 2
+  exit_rules:
+    - opposite_extreme: true
+    - trailing_stops: true
+    - max_hold_period: 50
+
+# Strategy-specific risk parameters
+risk:
+  max_drawdown: 0.15
+  max_position_risk: 0.02
+  correlation_threshold: 0.7
+
+# Performance targets
+performance:
+  min_sharpe: 1.2
+  max_drawdown: 0.18
+  min_hit_rate: 0.55
+  max_turnover: 0.70
+
+# Market regime filters
+filters:
+  volatility_regime: "medium"  # low, medium, high
+  trend_regime: "trending"     # trending, sideways, choppy
+  volume_regime: "normal"      # low, normal, high
+  
+# Optimization parameters
+optimization:
+  enabled: true
+  method: "bayesian"  # grid_search, genetic, bayesian
+  parameters:
+    uo_oversold: [25.0, 30.0, 35.0]
+    uo_overbought: [65.0, 70.0, 75.0]
+    adx_trend_threshold: [20.0, 25.0, 30.0]
+    mfi_oversold: [15.0, 20.0, 25.0]
+    mfi_overbought: [75.0, 80.0, 85.0]
+    entry_confirmation_bars: [1, 2, 3]
+  
+# Backtesting parameters
+backtesting:
+  lookback_period: 252  # Trading days
+  warmup_period: 50
+  rebalance_frequency: "daily"
+  transaction_costs:
+    commission: 0.001
+    slippage: 0.0005
+  
+# Machine Learning integration
+ml_integration:
+  enabled: true
+  features:
+    - ultimate_oscillator
+    - adx
+    - plus_di
+    - minus_di
+    - mfi
+    - signal_strength
+    - volatility
+    - volume_ratio
+  
+  models:
+    - name: "signal_filter"
+      type: "random_forest"
+      purpose: "filter_weak_signals"
+    
+    - name: "exit_timing"
+      type: "xgboost"
+      purpose: "optimize_exit_timing"
+    
+    - name: "regime_detector"
+      type: "ensemble"
+      purpose: "detect_market_regime"
+  
+  training:
+    retrain_frequency: "weekly"
+    min_training_samples: 1000
+    validation_split: 0.2
+    cross_validation_folds: 5
+
+# Monitoring and alerts
+monitoring:
+  performance_check_frequency: "daily"
+  risk_check_frequency: "hourly"
+  alerts:
+    - type: "drawdown"
+      threshold: 0.12
+      action: "reduce_position_sizes"
+    
+    - type: "volatility_spike"
+      threshold: 0.15
+      action: "pause_trading"
+    
+    - type: "adx_divergence"
+      threshold: 10.0
+      action: "review_signals"

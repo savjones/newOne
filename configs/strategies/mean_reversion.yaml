@@ -1,0 +1,130 @@
+# Mean Reversion Strategy Configuration
+# This strategy identifies overbought/oversold conditions using VWAP and Bollinger Bands
+
+strategy:
+  # VWAP Parameters
+  vwap_period: 20
+  vwap_deviation_threshold: 2.0
+  
+  # Bollinger Bands Parameters
+  bb_period: 20
+  bb_std_dev: 2.0
+  bb_squeeze_threshold: 0.5
+  
+  # Volume Confirmation
+  volume_ma_period: 20
+  volume_threshold: 1.5
+  
+  # Mean Reversion Parameters
+  rsi_period: 14
+  rsi_oversold: 30
+  rsi_overbought: 70
+  
+  # Entry/Exit Rules
+  entry_threshold: 2.5  # Standard deviations from mean
+  exit_threshold: 0.5   # Return to mean
+  max_hold_period: 48   # Maximum bars to hold position
+  
+  # Position Sizing
+  base_position_size: 0.1
+  volatility_scaling: true
+  max_position_size: 0.3
+  
+  # Risk Management
+  stop_loss_atr_multiplier: 2.0
+  take_profit_ratio: 2.0
+  trailing_stop: true
+  
+  # Performance Filters
+  min_volatility: 0.01
+  max_volatility: 0.10
+  trend_filter: true
+  trend_ma_period: 50
+
+# Strategy-specific risk parameters
+risk:
+  max_drawdown: 0.15
+  max_position_risk: 0.02
+  correlation_threshold: 0.7
+
+# Performance targets
+performance:
+  min_sharpe: 1.0
+  max_drawdown: 0.20
+  min_hit_rate: 0.55
+  max_turnover: 0.50
+
+# Market regime filters
+filters:
+  volatility_regime: "medium"  # low, medium, high
+  trend_regime: "sideways"     # trending, sideways, choppy
+  volume_regime: "normal"      # low, normal, high
+  
+# Optimization parameters
+optimization:
+  enabled: true
+  method: "grid_search"  # grid_search, genetic, bayesian
+  parameters:
+    vwap_period: [15, 20, 25]
+    bb_period: [15, 20, 25]
+    bb_std_dev: [1.8, 2.0, 2.2]
+    rsi_period: [10, 14, 18]
+    entry_threshold: [2.0, 2.5, 3.0]
+    exit_threshold: [0.3, 0.5, 0.7]
+  
+# Backtesting parameters
+backtesting:
+  lookback_period: 252  # Trading days
+  warmup_period: 50
+  rebalance_frequency: "daily"
+  transaction_costs:
+    commission: 0.001
+    slippage: 0.0005
+  
+# Machine Learning integration
+ml_integration:
+  enabled: true
+  features:
+    - vwap_deviation
+    - bb_deviation
+    - rsi
+    - volume_ratio
+    - volatility
+    - trend_direction
+    - bb_width
+  
+  models:
+    - name: "signal_filter"
+      type: "random_forest"
+      purpose: "filter_low_confidence_signals"
+    
+    - name: "position_sizer"
+      type: "xgboost"
+      purpose: "dynamic_position_sizing"
+    
+    - name: "regime_classifier"
+      type: "ensemble"
+      purpose: "market_regime_detection"
+  
+  training:
+    retrain_frequency: "weekly"
+    min_training_samples: 1000
+    validation_split: 0.2
+    cross_validation_folds: 5
+
+# Monitoring and alerts
+monitoring:
+  performance_check_frequency: "daily"
+  risk_check_frequency: "hourly"
+  alerts:
+    - type: "drawdown"
+      threshold: 0.10
+      action: "reduce_position_sizes"
+    
+    - type: "volatility_spike"
+      threshold: 0.15
+      action: "pause_trading"
+    
+    - type: "correlation_increase"
+      threshold: 0.8
+      action: "reduce_correlated_positions"
