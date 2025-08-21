@@ -1,3 +1,0 @@
-Strategy,Symbol,Timeframe,Total Return (%),Annualized Return (%),Sharpe Ratio,Sortino Ratio,Max Drawdown (%),Volatility (%),Win Rate (%),Profit Factor,Total Trades,Avg Trade Duration,Calmar Ratio,Execution Time (s)
-ultimate_oscillator,ETH,1d,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0.0,0.00701
-ultimate_oscillator,BTC,6h,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0.0,0.003378
